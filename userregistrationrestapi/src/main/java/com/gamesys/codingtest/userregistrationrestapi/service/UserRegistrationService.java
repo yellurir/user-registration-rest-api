@@ -3,6 +3,8 @@ package com.gamesys.codingtest.userregistrationrestapi.service;
 import com.gamesys.codingtest.userregistrationrestapi.exception.BadRequestException;
 import com.gamesys.codingtest.userregistrationrestapi.model.User;
 import com.gamesys.codingtest.userregistrationrestapi.repository.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.*;
@@ -21,6 +23,8 @@ public class UserRegistrationService implements ExclusionService{
 
     @Autowired
     private UserRepository userRepository;
+
+    private static Logger logger = LoggerFactory.getLogger(UserRegistrationService.class);
 
     //User Exclusion list
     private final List<User> exclusionUsers = Arrays.asList(
@@ -44,6 +48,7 @@ public class UserRegistrationService implements ExclusionService{
         userFieldValidate(user);
         if (validate(user.getDateOfBirth(), user.getSsn())) {
             if(userAlreadyExist(user)) {
+                logger.info("Saving user into the database");
                 return userRepository.save(user);
             } else {
                 throw new BadRequestException("User already exists");

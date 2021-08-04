@@ -25,7 +25,6 @@ public class UserRegistrationControllerTest {
     private MockMvc mockMvc;
     @Autowired
     private UserRepository userRepository;
-    private MvcResult mvcResult;
     private User user;
 
     @BeforeEach
@@ -39,11 +38,7 @@ public class UserRegistrationControllerTest {
     public void postUser_withValidRequestData_returnsCreated() throws Exception {
 
         //mock the user data that we have to save
-        User user = new User();
-        user.setUsername("thomas3dison");
-        user.setPassword("ligHt6u18");
-        user.setDateOfBirth("1847-02-11");
-        user.setSsn("18081931");
+        user = createUser();
         mockMvc.perform(post("/users")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapToJson(user))).andExpect(status().isCreated())
@@ -58,7 +53,7 @@ public class UserRegistrationControllerTest {
     public void postUser_presentInExclusionList_returnsBadRequest() throws Exception {
 
         //mock the user data that we have to save
-        User user = new User();
+        user = new User();
         user.setUsername("alanTuring");
         user.setPassword("eniGmA123");
         user.setDateOfBirth("1912-06-23");
@@ -73,11 +68,7 @@ public class UserRegistrationControllerTest {
     public void postUser_AlreadyPresentInDatabase_returnsIsFound() throws Exception {
 
         //mock the user data that we have to save
-        User user = new User();
-        user.setUsername("thomas3dison");
-        user.setPassword("ligHt6u18");
-        user.setDateOfBirth("1847-02-11");
-        user.setSsn("18081931");
+        user = createUser();
         mockMvc.perform(post("/users")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapToJson(user))).andExpect(status().isCreated()).andReturn();
@@ -92,11 +83,8 @@ public class UserRegistrationControllerTest {
     public void postUser_withInvalidUsername_returnsBadRequest() throws Exception {
 
         //mock the user data that we have to save
-        User user = new User();
+        user = createUser();
         user.setUsername("thomas@dison");
-        user.setPassword("ligHt6u18");
-        user.setDateOfBirth("1847-02-11");
-        user.setSsn("18081931");
         mockMvc.perform(post("/users")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapToJson(user))).andExpect(status().isBadRequest()).andReturn();
@@ -107,11 +95,8 @@ public class UserRegistrationControllerTest {
     public void postUser_withInvalidPasswordAllLowercase_returnsBadRequest() throws Exception {
 
         //mock the user data that we have to save
-        User user = new User();
-        user.setUsername("thomas3dison");
+        user = createUser();
         user.setPassword("lightbulb");
-        user.setDateOfBirth("1847-02-11");
-        user.setSsn("18081931");
         mockMvc.perform(post("/users")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapToJson(user))).andExpect(status().isBadRequest()).andReturn();
@@ -122,11 +107,8 @@ public class UserRegistrationControllerTest {
     public void postUser_withInvalidPasswordAllUppercase_returnsBadRequest() throws Exception {
 
         //mock the user data that we have to save
-        User user = new User();
-        user.setUsername("thomas3dison");
+        user = createUser();
         user.setPassword("LIGHTBULB");
-        user.setDateOfBirth("1847-02-11");
-        user.setSsn("18081931");
         mockMvc.perform(post("/users")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapToJson(user))).andExpect(status().isBadRequest()).andReturn();
@@ -137,27 +119,20 @@ public class UserRegistrationControllerTest {
     public void postUser_withInvalidPasswordNoDigit_returnsBadRequest() throws Exception {
 
         //mock the user data that we have to save
-        User user = new User();
-        user.setUsername("thomas3dison");
+        user = createUser();
         user.setPassword("ligHt");
-        user.setDateOfBirth("1847-02-11");
-        user.setSsn("18081931");
         mockMvc.perform(post("/users")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapToJson(user))).andExpect(status().isBadRequest()).andReturn();
     }
-
 
     @Test
     @DisplayName("Less than 4 characters - validate that the API doesn't create user into database with invalid password and returns 400 badRequest")
     public void postUser_withInvalidPassword_returnsBadRequest() throws Exception {
 
         //mock the user data that we have to save
-        User user = new User();
-        user.setUsername("thomas3dison");
+        user = createUser();
         user.setPassword("lit");
-        user.setDateOfBirth("1847-02-11");
-        user.setSsn("18081931");
         mockMvc.perform(post("/users")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapToJson(user))).andExpect(status().isBadRequest()).andReturn();
@@ -168,14 +143,20 @@ public class UserRegistrationControllerTest {
     public void postUser_withInvalidDateOfBirth_returnsBadRequest() throws Exception {
 
         //mock the user data that we have to save
-        User user = new User();
-        user.setUsername("thomas3dison");
-        user.setPassword("ligHt1");
+        user = createUser();
         user.setDateOfBirth("1992-May-12");
-        user.setSsn("18081931");
         mockMvc.perform(post("/users")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapToJson(user))).andExpect(status().isBadRequest()).andReturn();
+    }
+
+    private User createUser(){
+        user = new User();
+        user.setUsername("thomas3dison");
+        user.setPassword("ligHt6u18");
+        user.setDateOfBirth("1847-02-11");
+        user.setSsn("18081931");
+        return user;
     }
 
     private String mapToJson(Object obj) throws JsonProcessingException {
@@ -183,4 +164,3 @@ public class UserRegistrationControllerTest {
         return objectMapper.writeValueAsString(obj);
     }
 }
-

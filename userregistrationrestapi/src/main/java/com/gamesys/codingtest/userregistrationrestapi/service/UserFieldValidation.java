@@ -27,7 +27,7 @@ public class UserFieldValidation {
         return false;
     }
 
-    /*checks whether the password meets the give criteria (at least four characters, at least one lower case character,
+    /*checks whether the password meets the given criteria (at least four characters, at least one lower case character,
      at least one upper case character, at least one number)*/
     public static boolean validatePassword(String password){
         if (password.length()>=4 &&
@@ -49,4 +49,3 @@ public class UserFieldValidation {
         return true;
     }
 }
-
