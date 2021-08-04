@@ -59,17 +59,17 @@ public class UserRegistrationService implements ExclusionService{
     }
 
     //validates the user parameters if the parameters are invalid it will throw BadRequest exception
-    public void userFieldValidate(User user){
-        if(UserFieldValidation.validateUsername(user.getUsername()) &&
-                UserFieldValidation.validatePassword(user.getPassword()) &&
-                UserFieldValidation.validateDateOfBirth(user.getDateOfBirth())) {
-        }else{
+    private void userFieldValidate(User user){
+        if(!UserFieldValidation.validateUsername(user.getUsername()) ||
+                !UserFieldValidation.validatePassword(user.getPassword()) ||
+                !UserFieldValidation.validateDateOfBirth(user.getDateOfBirth())) {
+
             throw new BadRequestException("Failed validation - invalid username or password");
         }
     }
 
     //validates if the user already exist in the database
-    public boolean userAlreadyExist(User user){
+    private boolean userAlreadyExist(User user){
         return userRepository.findAll()
                 .stream()
                 .noneMatch(u -> u.getSsn().equals(user.getSsn()));
